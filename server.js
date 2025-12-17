@@ -8,18 +8,36 @@ const PORT = process.env.PORT || 3100;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// Minimal CORS for separated frontend (Netlify) and backend (Render)
+// Robust CORS for separated frontend (Netlify) and backend (Render)
 app.use((req, res, next) => {
-  const allowed = process.env.CORS_ORIGIN;
-  const origin = req.headers.origin;
-  if (allowed) {
-    res.setHeader('Access-Control-Allow-Origin', allowed === '*' ? '*' : (origin && allowed.split(',').map(s => s.trim()).includes(origin) ? origin : allowed));
+  const configured = (process.env.CORS_ORIGIN || '').split(',').map(s => s.trim()).filter(Boolean);
+  const origin = String(req.headers.origin || '');
+  const normalize = (u) => String(u || '').replace(/\/+$/, '').toLowerCase();
+  const originN = normalize(origin);
+  const allowedList = configured.map(normalize);
+  let allowOrigin = '*';
+  let allowCreds = false;
+  if (allowedList.length > 0) {
+    if (origin && (allowedList.includes(originN))) {
+      allowOrigin = origin;
+      allowCreds = true;
+    } else if (allowedList.includes('*')) {
+      allowOrigin = '*';
+      allowCreds = false;
+    } else {
+      // Fallback to first configured (normalized w/o trailing slash)
+      allowOrigin = configured[0].replace(/\/+$/, '');
+      allowCreds = false;
+    }
   } else {
-    res.setHeader('Access-Control-Allow-Origin', '*');
+    allowOrigin = '*';
+    allowCreds = false;
   }
+  res.setHeader('Access-Control-Allow-Origin', allowOrigin);
+  res.setHeader('Vary', 'Origin');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Credentials', allowCreds ? 'true' : 'false');
   if (req.method === 'OPTIONS') {
     res.status(204).end();
     return;
