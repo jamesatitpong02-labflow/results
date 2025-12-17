@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>labflow-Result</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Itim&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="page page-home">
+    <main class="container wide">
+      <div class="hero-split">
+        <div class="hero-left">
+          <img src="logo (2).png" style="width: 100px;" alt="logo" class="logo">
+          <div class="welcome">WELCOME</div>
+          <div class="headline">Labflow-Result</div>
+          <div class="desc">ระบบดูผลตรวจสุขภาพสำหรับผู้รับบริการ ใช้งานง่าย เห็นผลไว ปลอดภัย รองรับการค้นหาด้วยเลขบัตรประชาชนและเลข LN</div>
+        </div>
+        <div class="hero-right">
+          <div class="hero-card">
+            <div id="homeStatus" class="status"></div>
+            <form id="searchForm" class="card card-home">
+              <div class="form-head">
+                <div class="avatar">
+                  <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="2"/>
+                    <path d="M4 20c0-4 4-6 8-6s8 2 8 6" stroke="currentColor" stroke-width="2" fill="none"/>
+                  </svg>
+                </div>
+                <div class="form-title">ลงชื่อเข้าใช้</div>
+              </div>
+              <div class="input-row" id="cidRow">
+                <label for="cid">หมายเลขผู้อ้างอิง</label>
+                <div class="input-group">
+                  <span class="icon-box" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 12c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5Zm0 2c-4.42 0-8 2.24-8 5v2h16v-2c0-2.76-3.58-5-8-5Z"/>
+                    </svg>
+                  </span>
+                  <input id="cid" name="cid" type="text" inputmode="numeric" placeholder="กรอกเลขบัตรประชาชน" required>
+                  <div class="suffix">
+                    <span class="status-dot" id="cidState"></span>
+                  </div>
+                </div>
+              <div class="input-row" id="lnRow">
+                <label for="ln">เลข LN</label>
+                <div class="input-group">
+                  <span class="icon-box" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M17 8V7a5 5 0 10-10 0v1H5v12h14V8h-2Zm-8 0V7a3 3 0 116 0v1H9Z"/>
+                    </svg>
+                  </span>
+                  <input id="ln" name="ln" type="text" inputmode="numeric" placeholder="กรอกเลข LN" required>
+                  <div class="suffix">
+                    <span class="status-dot" id="lnState"></span>
+                  </div>
+                </div>
+              <div class="actions">
+                <button type="submit" class="btn primary" id="submitBtn">ตกลง</button>
+                <button type="reset" class="btn">ล้างค่า</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="footer">
+      <span>© 2025 Labflow</span>
+    </footer>
+  </div>
+  <script src="index.js"></script>
+</body>
+<style>
+</style>
+</html>
