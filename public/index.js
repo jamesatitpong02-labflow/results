@@ -44,6 +44,8 @@ form.addEventListener('submit', (e) => {
   const q = new URLSearchParams();
   q.set('cid', cid);
   q.set('ln', ln);
+  const apiBase = (localStorage.getItem('apiBase') || '').trim();
+  if (apiBase) q.set('api', apiBase);
   const url = `result.html?${q.toString()}`;
   window.location.href = url;
 });

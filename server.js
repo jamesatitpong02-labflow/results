@@ -8,6 +8,24 @@ const PORT = process.env.PORT || 3100;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// Minimal CORS for separated frontend (Netlify) and backend (Render)
+app.use((req, res, next) => {
+  const allowed = process.env.CORS_ORIGIN;
+  const origin = req.headers.origin;
+  if (allowed) {
+    res.setHeader('Access-Control-Allow-Origin', allowed === '*' ? '*' : (origin && allowed.split(',').map(s => s.trim()).includes(origin) ? origin : allowed));
+  } else {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+  }
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  if (req.method === 'OPTIONS') {
+    res.status(204).end();
+    return;
+  }
+  next();
+});
 app.use(express.static(path.join(__dirname, 'public')));
 
 let client;

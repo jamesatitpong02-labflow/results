@@ -1,6 +1,6 @@
 function getParams() {
   const p = new URLSearchParams(window.location.search);
-  return { cid: p.get('cid') || '', ln: p.get('ln') || '' };
+  return { cid: p.get('cid') || '', ln: p.get('ln') || '', api: p.get('api') || '' };
 }
 function pick(o, keys) {
   for (const k of keys) {
@@ -52,7 +52,15 @@ async function load() {
   const leftCol = document.getElementById('patientCol');
   const rightCol = document.getElementById('resultsCol');
   const box = document.getElementById('results');
-  const { cid, ln } = getParams();
+  const { cid, ln, api } = getParams();
+  const apiBaseStored = (localStorage.getItem('apiBase') || '').trim();
+  const isNetlify = /\.netlify\.app$/i.test(window.location.host);
+  let baseCandidate = api || apiBaseStored;
+  if (!baseCandidate && isNetlify) baseCandidate = 'https://results-30z0.onrender.com';
+  const apiBase = (baseCandidate || '').replace(/\/$/, '');
+  if (baseCandidate && baseCandidate !== apiBaseStored) {
+    try { localStorage.setItem('apiBase', apiBase); } catch {}
+  }
   if (!cid || !ln) {
     status.innerHTML = '<div class="status-container"><div class="status-text">กรุณากรอกข้อมูลให้ครบ</div></div>';
     return;
@@ -64,7 +72,9 @@ async function load() {
     </div>
   `;
   try {
-    const r = await fetch(`/api/patient-report?cid=${encodeURIComponent(cid)}&ln=${encodeURIComponent(ln)}`);
+    const base = apiBase ? apiBase : '';
+    const endpoint = `${base ? base : ''}/api/patient-report?cid=${encodeURIComponent(cid)}&ln=${encodeURIComponent(ln)}`;
+    const r = await fetch(endpoint);
     if (!r.ok) {
       status.innerHTML = `
         <div class="status-container">
@@ -516,5 +526,3 @@ function openVisitPopup(v) {
   
   document.body.appendChild(overlay);
 }
-
-
